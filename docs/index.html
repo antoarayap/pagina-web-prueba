@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Antonia Araya">
-    <meta name="description" content="Pieza narrativa individual sobre la evolución del capital previo en Miss Universo Chile.">
+    <meta name="description" content="Pieza narrative individual sobre la evolución del capital previo en Miss Universo Chile.">
     <title>La Evolución del Capital Previo en Miss Universo Chile</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 </head>
 <body>
 
@@ -23,35 +27,27 @@
             <p>Al analizar los registros históricos de las ganadoras de Miss Universo Chile desde la década de 1990 hasta el presente, salta a la vista una transformación profunda en el perfil de las candidatas. Los certámenes de belleza dejaron de ser plataformas de debut social para transformarse en circuitos altamente competitivos que exigen un capital previo considerable.</p>
             
             <p>A través del procesamiento del dataset interactivo, agrupamos el nivel de trayectoria de las soberanas nacionales en tres categorías estrictas: <strong>Profesional</strong>, <strong>Amateur</strong> y <strong>Sin experiencia</strong>. Los resultados demuestran un fenómeno de profesionalización acelerada a medida que avanzan las décadas. Mientras que en los años 90 existía un espacio significativo para candidatas que iniciaban su carrera directamente en el certamen, las décadas posteriores muestran un dominio casi absoluto de mujeres que ingresan con un recorrido sólido en agencias de modelaje, televisión o certámenes previos.</p>
-            
-            <p>Este cambio estructural sugiere que el circuito del modelaje de alta competencia y la industria de la moda local comenzaron a colonizar las estructuras de Miss Chile, transformando la corona en un peldaño de consolidación profesional más que en un punto de partida azaroso.</p>
         </section>
 
         <hr>
 
         <section id="visualizacion">
             <h2>Visualización Interactiva: Evolución por Década</h2>
-            <p>El siguiente gráfico de barras apiladas, desarrollado mediante programación en Python (Altair), ilustra numéricamente cómo las ganadoras de la categoría "Sin experiencia" han disminuido drásticamente frente al aumento de perfiles "Profesionales" y "Amateurs" en las últimas tres décadas:</p>
+            <p>El siguiente gráfico de barras apiladas, desarrollado mediante programación en Python (Altair), ilustra numéricamente cómo las ganadoras de la categoría "Sin experiencia" han disminuido drásticamente en las últimas tres décadas:</p>
             
-            <img src="grafico_capital_previo.png" alt="Gráfico de barras apiladas que muestra la evolución de la experiencia previa (Profesional, Amateur, Sin experiencia) por década en Miss Universo Chile" width="600">
-            
-            <p><em>Figura 1: Distribución de ganadoras de Miss Universo Chile según tramos de trayectoria previa (1990s - 2020s).</em></p>
+            <div id="vis"></div>
         </section>
 
         <hr>
 
         <section id="fuentes">
             <h2>Fuentes de Información y Repositorios</h2>
-            <p>Para la construcción de este análisis estadístico individual, se utilizaron los siguientes recursos:</p>
-            
+            <p>Para la construcción de este análisis de datos individual, se utilizaron los siguientes recursos:</p>
             <ul>
                 <li>Dataset histórico consolidado: <code>experienciamiss.csv</code>.</li>
                 <li>Librerías de procesamiento y visualización de datos: Pandas y Altair de Python.</li>
             </ul>
-
-            <p>Puedes conocer más sobre los estándares técnicos de las visualizaciones interactivas en la documentación oficial de 
-               <a href="https://altair-viz.github.io/" target="_blank">Altair Visualization</a>.
-            </p>
+            <p>Puedes conocer más sobre los estándares técnicos en el sitio de <a href="https://altair-viz.github.io/" target="_blank">Altair Visualization</a>.</p>
         </section>
 
     </div>
@@ -62,5 +58,45 @@
         <p>© 2026 Proyecto Miss Chile - Herramientas de Narración Gráfica. Desarrollado por Antonia Araya.</p>
     </footer>
 
+    <script>
+      var spec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "title": "Evolución del Capital Previo por Década (Miss Universo Chile)",
+        "width": 500,
+        "height": 400,
+        "data": {
+          "values": [
+            {"Decada": "1990s", "Categoria": "Sin experiencia", "count": 5},
+            {"Decada": "1990s", "Categoria": "Amateur", "count": 3},
+            {"Decada": "1990s", "Categoria": "Profesional", "count": 2},
+            {"Decada": "2000s", "Categoria": "Sin experiencia", "count": 2},
+            {"Decada": "2000s", "Categoria": "Amateur", "count": 4},
+            {"Decada": "2000s", "Categoria": "Profesional", "count": 4},
+            {"Decada": "2010s", "Categoria": "Sin experiencia", "count": 1},
+            {"Decada": "2010s", "Categoria": "Amateur", "count": 3},
+            {"Decada": "2010s", "Categoria": "Profesional", "count": 6},
+            {"Decada": "2020s", "Categoria": "Sin experiencia", "count": 0},
+            {"Decada": "2020s", "Categoria": "Amateur", "count": 2},
+            {"Decada": "2020s", "Categoria": "Profesional", "count": 4}
+          ]
+        },
+        "mark": {"type": "bar", "size": 60},
+        "encoding": {
+          "x": {"field": "Decada", "type": "nominal", "title": "Décadas", "sort": ["1990s", "2000s", "2010s", "2020s"]},
+          "y": {"field": "count", "type": "quantitative", "title": "Cantidad de Ganadoras"},
+          "color": {
+            "field": "Categoria",
+            "type": "nominal",
+            "title": "Nivel de Experiencia",
+            "scale": {
+              "domain": ["Profesional", "Amateur", "Sin experiencia"],
+              "range": ["#1f77b4", "#ff7f0e", "#2ca02c"]
+            }
+          },
+          "tooltip": [{"field": "count", "title": "Cantidad"}, {"field": "Decada", "title": "Década"}, {"field": "Categoria", "title": "Nivel de Experiencia"}]
+        }
+      };
+      vegaEmbed('#vis', spec);
+    </script>
 </body>
 </html>
